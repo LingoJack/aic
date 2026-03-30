@@ -4,10 +4,11 @@ mod indicator;
 mod keyboard;
 mod keymap;
 mod mouse;
+mod preview;
 mod screenshot;
 
 use clap::Parser;
-use cli::{Cli, Command, KeyAction, MouseAction};
+use cli::{Cli, Command, KeyAction, MouseAction, PreviewAction};
 
 fn main() {
     let cli = Cli::parse();
@@ -43,6 +44,18 @@ fn main() {
                     _ => None,
                 };
                 mouse::scroll(dx, dy, at)
+            }
+            MouseAction::Preview { action } => {
+                let output = match &action {
+                    PreviewAction::Click { output, .. }
+                    | PreviewAction::Doubleclick { output, .. }
+                    | PreviewAction::Rightclick { output, .. }
+                    | PreviewAction::Move { output, .. }
+                    | PreviewAction::Longpress { output, .. }
+                    | PreviewAction::Drag { output, .. }
+                    | PreviewAction::Scroll { output, .. } => output.as_deref(),
+                };
+                preview::preview_mouse_action(&action, output)
             }
         },
         Command::Screenshot { output, base64 } => {

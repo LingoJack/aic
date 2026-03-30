@@ -77,7 +77,8 @@ pub enum Command {
               aic mouse longpress 100 200 --duration-ms 1000  # hold 1s\n  \
               aic mouse drag 100 200 300 400                  # drag\n  \
               aic mouse scroll 0 -3                           # scroll down 3 lines\n  \
-              aic mouse scroll 0 3 --x 500 --y 300            # scroll at position"
+              aic mouse scroll 0 3 --x 500 --y 300            # scroll at position\n  \
+              aic mouse preview click 500 300 -o p.png        # dry-run preview"
     )]
     Mouse {
         #[command(subcommand)]
@@ -221,7 +222,7 @@ pub enum MouseAction {
     },
 
     /// Scroll the mouse wheel
-    #[command(long_about = "Scroll the mouse wheel at the current or specified position.\n\
+    #[command(allow_negative_numbers = true, long_about = "Scroll the mouse wheel at the current or specified position.\n\
         Positive dy = scroll up, negative dy = scroll down.\n\
         Positive dx = scroll right, negative dx = scroll left.\n\n\
         Examples:\n  aic mouse scroll 0 -5                        # scroll down 5 lines\n  \
@@ -239,5 +240,85 @@ pub enum MouseAction {
         /// Optional: Y position to scroll at
         #[arg(long)]
         y: Option<f64>,
+    },
+
+    /// Dry-run preview: annotate a screenshot without executing
+    #[command(
+        long_about = "Preview a mouse action by drawing it on a screenshot, without actually\n\
+            performing it. Useful for LLMs to verify coordinates before acting.\n\n\
+            Outputs an annotated screenshot (base64 PNG to stdout by default).\n\n\
+            Examples:\n  aic mouse preview click 500 300               # base64 to stdout\n  \
+              aic mouse preview click 500 300 -o p.png     # save to file\n  \
+              aic mouse preview drag 100 200 400 500       # shows path arrow\n  \
+              aic mouse preview scroll 0 -3 --x 500 --y 300"
+    )]
+    Preview {
+        #[command(subcommand)]
+        action: PreviewAction,
+    },
+}
+
+#[derive(Subcommand)]
+pub enum PreviewAction {
+    /// Preview a click at position
+    Click {
+        x: f64,
+        y: f64,
+        /// Save annotated screenshot to file (default: base64 to stdout)
+        #[arg(short, long)]
+        output: Option<String>,
+    },
+    /// Preview a double-click at position
+    Doubleclick {
+        x: f64,
+        y: f64,
+        #[arg(short, long)]
+        output: Option<String>,
+    },
+    /// Preview a right-click at position
+    Rightclick {
+        x: f64,
+        y: f64,
+        #[arg(short, long)]
+        output: Option<String>,
+    },
+    /// Preview a cursor move to position
+    Move {
+        x: f64,
+        y: f64,
+        #[arg(short, long)]
+        output: Option<String>,
+    },
+    /// Preview a long press at position
+    Longpress {
+        x: f64,
+        y: f64,
+        #[arg(short, long)]
+        output: Option<String>,
+    },
+    /// Preview a drag path from start to end
+    Drag {
+        x1: f64,
+        y1: f64,
+        x2: f64,
+        y2: f64,
+        #[arg(short, long)]
+        output: Option<String>,
+    },
+    /// Preview a scroll action
+    #[command(allow_negative_numbers = true)]
+    Scroll {
+        /// Horizontal scroll direction
+        dx: i32,
+        /// Vertical scroll direction
+        dy: i32,
+        /// X position
+        #[arg(long)]
+        x: Option<f64>,
+        /// Y position
+        #[arg(long)]
+        y: Option<f64>,
+        #[arg(short, long)]
+        output: Option<String>,
     },
 }
