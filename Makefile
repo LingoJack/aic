@@ -1,4 +1,4 @@
-.PHONY: build install uninstall clean
+.PHONY: build install uninstall clean push
 
 PREFIX ?= $(HOME)/.local/bin
 
@@ -16,3 +16,16 @@ uninstall:
 
 clean:
 	cargo clean
+
+# Commit and push changes
+push:
+	@echo "📦 提交更改..."
+	@git add -A
+	@if [ -z "$$(git status --porcelain)" ]; then \
+		echo "ℹ️  没有更改需要提交"; \
+	else \
+		git commit -m "checkpoint: $$(date '+%Y-%m-%d %H:%M:%S')"; \
+		echo "✅ 提交完成"; \
+	fi
+	@echo "🚀 推送到远程..."
+	@git push

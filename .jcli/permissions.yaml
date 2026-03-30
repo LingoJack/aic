@@ -3,4 +3,6 @@ allow:
 - Bash(aic:*)
 - Bash(which aic:*)
 - Bash(ls -lh:*)
+- Read
+- Edit
 deny: []
