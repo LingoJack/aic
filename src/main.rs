@@ -1,5 +1,6 @@
 mod cli;
 mod error;
+mod indicator;
 mod keyboard;
 mod keymap;
 mod mouse;

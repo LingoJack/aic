@@ -20,6 +20,7 @@ unsafe extern "C" {
 }
 
 use crate::error::AicError;
+use crate::indicator;
 
 fn event_source() -> Result<CGEventSource, AicError> {
     CGEventSource::new(CGEventSourceStateID::HIDSystemState)
@@ -38,6 +39,7 @@ fn mouse_event(
 
 /// Move the cursor to an absolute position.
 pub fn move_to(x: f64, y: f64) -> Result<(), AicError> {
+    indicator::show_at(x, y);
     let point = CGPoint::new(x, y);
     let event = mouse_event(CGEventType::MouseMoved, point, CGMouseButton::Left)?;
     event.post(CGEventTapLocation::HID);
@@ -46,6 +48,7 @@ pub fn move_to(x: f64, y: f64) -> Result<(), AicError> {
 
 /// Left-click at position.
 pub fn click(x: f64, y: f64) -> Result<(), AicError> {
+    indicator::show_at(x, y);
     let point = CGPoint::new(x, y);
 
     let down = mouse_event(CGEventType::LeftMouseDown, point, CGMouseButton::Left)?;
@@ -59,6 +62,7 @@ pub fn click(x: f64, y: f64) -> Result<(), AicError> {
 
 /// Double-click at position.
 pub fn double_click(x: f64, y: f64) -> Result<(), AicError> {
+    indicator::show_at(x, y);
     let point = CGPoint::new(x, y);
 
     // First click
@@ -85,6 +89,7 @@ pub fn double_click(x: f64, y: f64) -> Result<(), AicError> {
 
 /// Right-click at position.
 pub fn right_click(x: f64, y: f64) -> Result<(), AicError> {
+    indicator::show_at(x, y);
     let point = CGPoint::new(x, y);
 
     let down = mouse_event(CGEventType::RightMouseDown, point, CGMouseButton::Right)?;
@@ -98,6 +103,7 @@ pub fn right_click(x: f64, y: f64) -> Result<(), AicError> {
 
 /// Long press (hold) at position.
 pub fn long_press(x: f64, y: f64, duration_ms: u64) -> Result<(), AicError> {
+    indicator::show_at(x, y);
     let point = CGPoint::new(x, y);
 
     let down = mouse_event(CGEventType::LeftMouseDown, point, CGMouseButton::Left)?;
@@ -111,6 +117,7 @@ pub fn long_press(x: f64, y: f64, duration_ms: u64) -> Result<(), AicError> {
 
 /// Drag from one position to another.
 pub fn drag(x1: f64, y1: f64, x2: f64, y2: f64, duration_ms: u64) -> Result<(), AicError> {
+    indicator::show_at(x1, y1);
     let start = CGPoint::new(x1, y1);
     let end = CGPoint::new(x2, y2);
 
@@ -141,8 +148,8 @@ pub fn drag(x1: f64, y1: f64, x2: f64, y2: f64, duration_ms: u64) -> Result<(), 
 
 /// Scroll at an optional position.
 pub fn scroll(dx: i32, dy: i32, at: Option<(f64, f64)>) -> Result<(), AicError> {
-    // Move to position first if specified
     if let Some((x, y)) = at {
+        indicator::show_at(x, y);
         move_to(x, y)?;
         thread::sleep(Duration::from_millis(10));
     }

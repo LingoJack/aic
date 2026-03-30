@@ -1,0 +1,52 @@
+[
+  {
+    "id": "1",
+    "content": "测试截屏功能 (screenshot)",
+    "status": "completed"
+  },
+  {
+    "id": "2",
+    "content": "测试键盘按键功能 (key)",
+    "status": "completed"
+  },
+  {
+    "id": "3",
+    "content": "测试文本输入功能 (type)",
+    "status": "completed"
+  },
+  {
+    "id": "4",
+    "content": "测试鼠标移动功能 (mouse move)",
+    "status": "completed"
+  },
+  {
+    "id": "5",
+    "content": "测试鼠标点击功能 (mouse click)",
+    "status": "completed"
+  },
+  {
+    "id": "6",
+    "content": "测试鼠标双击功能 (mouse doubleclick)",
+    "status": "completed"
+  },
+  {
+    "id": "7",
+    "content": "测试鼠标右键功能 (mouse rightclick)",
+    "status": "completed"
+  },
+  {
+    "id": "8",
+    "content": "测试鼠标长按功能 (mouse longpress)",
+    "status": "completed"
+  },
+  {
+    "id": "9",
+    "content": "测试鼠标拖拽功能 (mouse drag)",
+    "status": "completed"
+  },
+  {
+    "id": "10",
+    "content": "测试鼠标滚动功能 (mouse scroll)",
+    "status": "completed"
+  }
+]
