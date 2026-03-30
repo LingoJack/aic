@@ -28,4 +28,4 @@ push:
 		echo "✅ 提交完成"; \
 	fi
 	@echo "🚀 推送到远程..."
-	@git push
+	@git push origin main
