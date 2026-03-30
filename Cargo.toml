@@ -1,0 +1,12 @@
+[package]
+name = "aic"
+version = "0.1.0"
+edition = "2021"
+description = "AI Computer - CLI tool for AI agents to control macOS like a human"
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+core-graphics = "0.24"
+core-foundation = "0.10"
+image = "0.25"
+base64 = "0.22"
