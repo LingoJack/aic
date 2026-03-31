@@ -11,7 +11,7 @@ const COLOR_END: Rgba<u8> = Rgba([50, 180, 255, 220]); // blue for drag end / sc
 
 // --- drawing primitives ---
 
-fn blend_pixel(img: &mut RgbaImage, x: i32, y: i32, color: Rgba<u8>) {
+pub(crate) fn blend_pixel(img: &mut RgbaImage, x: i32, y: i32, color: Rgba<u8>) {
     if x < 0 || y < 0 || x >= img.width() as i32 || y >= img.height() as i32 {
         return;
     }
@@ -62,7 +62,7 @@ fn draw_filled_circle(img: &mut RgbaImage, cx: f64, cy: f64, radius: f64, color:
     }
 }
 
-fn draw_line(img: &mut RgbaImage, x1: f64, y1: f64, x2: f64, y2: f64, thickness: f64, color: Rgba<u8>) {
+pub(crate) fn draw_line(img: &mut RgbaImage, x1: f64, y1: f64, x2: f64, y2: f64, thickness: f64, color: Rgba<u8>) {
     let dx = x2 - x1;
     let dy = y2 - y1;
     let len = (dx * dx + dy * dy).sqrt();
@@ -123,6 +123,25 @@ fn draw_dashed_line(
 fn draw_cross(img: &mut RgbaImage, cx: f64, cy: f64, size: f64, thickness: f64, color: Rgba<u8>) {
     draw_line(img, cx - size, cy, cx + size, cy, thickness, color);
     draw_line(img, cx, cy - size, cx, cy + size, thickness, color);
+}
+
+pub(crate) fn draw_rect(img: &mut RgbaImage, x: f64, y: f64, w: f64, h: f64, thickness: f64, color: Rgba<u8>) {
+    // Top
+    draw_line(img, x, y, x + w, y, thickness, color);
+    // Bottom
+    draw_line(img, x, y + h, x + w, y + h, thickness, color);
+    // Left
+    draw_line(img, x, y, x, y + h, thickness, color);
+    // Right
+    draw_line(img, x + w, y, x + w, y + h, thickness, color);
+}
+
+pub(crate) fn draw_filled_rect(img: &mut RgbaImage, x: i32, y: i32, w: i32, h: i32, color: Rgba<u8>) {
+    for py in y..(y + h) {
+        for px in x..(x + w) {
+            blend_pixel(img, px, py, color);
+        }
+    }
 }
 
 fn draw_arrowhead(img: &mut RgbaImage, tip_x: f64, tip_y: f64, from_x: f64, from_y: f64, arrow_len: f64, thickness: f64, color: Rgba<u8>) {

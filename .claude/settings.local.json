@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(make build:*)",
+      "Bash(cargo build:*)",
+      "Bash(./target/release/aic --help 2>&1)",
+      "Bash(./target/release/aic ax:*)",
+      "Bash(./target/release/aic find:*)",
+      "Bash(./target/release/aic screenshot:*)"
+    ]
+  }
+}

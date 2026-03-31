@@ -5,14 +5,16 @@ PREFIX ?= $(HOME)/.local/bin
 build:
 	cargo build --release
 	swiftc helpers/indicator.swift -o target/release/aic-indicator -O
+	swiftc helpers/ax.swift -o target/release/aic-ax -O -framework Cocoa -framework ApplicationServices
 
 install: build
 	mkdir -p $(PREFIX)
 	cp target/release/aic $(PREFIX)/aic
 	cp target/release/aic-indicator $(PREFIX)/aic-indicator
+	cp target/release/aic-ax $(PREFIX)/aic-ax
 
 uninstall:
-	rm -f $(PREFIX)/aic $(PREFIX)/aic-indicator
+	rm -f $(PREFIX)/aic $(PREFIX)/aic-indicator $(PREFIX)/aic-ax
 
 clean:
 	cargo clean

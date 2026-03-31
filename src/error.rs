@@ -8,6 +8,9 @@ pub enum AicError {
     ScreenshotFailed(String),
     ImageEncodingFailed(String),
     IoError(std::io::Error),
+    AxHelperNotFound,
+    AxQueryFailed(String),
+    AxParseFailed(String),
 }
 
 impl fmt::Display for AicError {
@@ -19,6 +22,9 @@ impl fmt::Display for AicError {
             AicError::ScreenshotFailed(msg) => write!(f, "Screenshot failed: {msg}"),
             AicError::ImageEncodingFailed(msg) => write!(f, "Image encoding failed: {msg}"),
             AicError::IoError(e) => write!(f, "IO error: {e}"),
+            AicError::AxHelperNotFound => write!(f, "aic-ax helper not found — make sure it is next to the aic binary or in PATH"),
+            AicError::AxQueryFailed(msg) => write!(f, "Accessibility query failed: {msg}"),
+            AicError::AxParseFailed(msg) => write!(f, "Failed to parse accessibility data: {msg}"),
         }
     }
 }

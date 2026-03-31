@@ -1,3 +1,4 @@
+mod ax;
 mod cli;
 mod error;
 mod indicator;
@@ -6,6 +7,7 @@ mod keymap;
 mod mouse;
 mod preview;
 mod screenshot;
+mod som;
 
 use clap::Parser;
 use cli::{Cli, Command, KeyAction, MouseAction, PreviewAction};
@@ -58,8 +60,18 @@ fn main() {
                 preview::preview_mouse_action(&action, output)
             }
         },
-        Command::Screenshot { output, base64 } => {
-            screenshot::take_screenshot(output.as_deref(), base64)
+        Command::Screenshot { output, base64, som, app } => {
+            if som {
+                som::capture_som(app.as_deref(), output.as_deref(), base64)
+            } else {
+                screenshot::take_screenshot(output.as_deref(), base64)
+            }
+        }
+        Command::Ax { app, depth, clickable } => {
+            ax::run_tree_query(app.as_deref(), depth, clickable)
+        }
+        Command::Find { query, app, role } => {
+            ax::run_find_query(&query, app.as_deref(), role.as_deref())
         }
     };
 

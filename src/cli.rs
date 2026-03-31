@@ -92,7 +92,9 @@ pub enum Command {
             Examples:\n  \
               aic screenshot -o screen.png    # save to file\n  \
               aic screenshot --base64         # output base64 PNG to stdout\n  \
-              aic screenshot > screen.png     # raw PNG bytes to stdout"
+              aic screenshot > screen.png     # raw PNG bytes to stdout\n  \
+              aic screenshot --som -o som.png # SoM annotated screenshot\n  \
+              aic screenshot --som            # SoM with base64 output + JSON index to stderr"
     )]
     Screenshot {
         /// Save screenshot to this file path (e.g. screen.png)
@@ -101,6 +103,53 @@ pub enum Command {
         /// Print base64-encoded PNG to stdout (useful for piping to AI)
         #[arg(long)]
         base64: bool,
+        /// Overlay Set-of-Mark numbered labels on interactive UI elements
+        #[arg(long)]
+        som: bool,
+        /// Target application name for SoM (default: frontmost app)
+        #[arg(long)]
+        app: Option<String>,
+    },
+
+    /// Query the Accessibility element tree of an application
+    #[command(
+        long_about = "Query the macOS Accessibility API to get the UI element tree.\n\
+            Requires Accessibility permission in System Settings.\n\n\
+            Examples:\n  \
+              aic ax                        # full tree of frontmost app\n  \
+              aic ax --app Finder --depth 3 # Finder, 3 levels deep\n  \
+              aic ax --clickable            # only interactive elements"
+    )]
+    Ax {
+        /// Target application name (default: frontmost app)
+        #[arg(long)]
+        app: Option<String>,
+        /// Maximum tree depth to traverse
+        #[arg(long)]
+        depth: Option<u32>,
+        /// Only show interactive/clickable elements
+        #[arg(long)]
+        clickable: bool,
+    },
+
+    /// Search for UI elements by text content
+    #[command(
+        long_about = "Search the Accessibility tree for elements matching a text query.\n\
+            Searches title, description, and value attributes (case-insensitive).\n\n\
+            Examples:\n  \
+              aic find \"OK\"                 # find buttons/elements with 'OK'\n  \
+              aic find \"Save\" --app Safari  # search in Safari\n  \
+              aic find \"Submit\" --role AXButton # only buttons"
+    )]
+    Find {
+        /// Text to search for in element titles, descriptions, and values
+        query: String,
+        /// Target application name (default: frontmost app)
+        #[arg(long)]
+        app: Option<String>,
+        /// Filter by accessibility role (e.g. AXButton, AXTextField)
+        #[arg(long)]
+        role: Option<String>,
     },
 }
 
